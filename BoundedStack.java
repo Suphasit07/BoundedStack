@@ -13,7 +13,7 @@ public class BoundedStack{
     //RI(User) = ชื่อ User ห้ามซ้ำกัน
     //RI(User) = ไม่มีชื่อ User ที่เป็นสตริงว่าง
     //RI(User) = User 1 คน ซื้อ Ticket ได้ 1 ใบ
-    //RI(User) = 
+    //RI(User) = da[sdkasdpkad]
     // - 
     
     /**
