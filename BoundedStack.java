@@ -1,24 +1,27 @@
 import java.util.*;
 /*
  * 
- * BoundedStack คือ ..
+ * BoundedStack คือ 
  */
+// จิรายุ เขียวภักดี 6821651116
+// ศุภธิษณ์ กอประเสริฐสุด 6821651825
 public class BoundedStack{
     private final List<String> user;
     private final List<String> password;
     private final int ticket;
     private final List<String> seat;
+    public static final int MAX_SEAT = 250;
     //Abstraction Function:
-    //AF(User,Ticket,Seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat ตามลำดับ)
+    //AF(user,password,ticket,seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat ตามลำดับ)
 
     // Representation Invariant:
-    //RI(User) = ชื่อ User ห้ามซ้ำกัน
-    //RI(User) = ไม่มีชื่อ User ที่เป็นสตริงว่าง
-    //RI(User) = ตำแหน่ง Seat ต้องไม่ซ้ำกัน
-    //RI(User) = User 1 คน ซื้อ Ticket ได้ 1 ใบ
-    //RI(User) = 
-    //RI(User) =
-    // - 
+    //ชื่อ user ห้ามซ้ำกัน
+    //ไม่มีชื่อ user ที่เป็นสตริงว่าง
+    //password ต้องมีมากกว่า 8 ตัว และต้องไม่เป็นช่องว่าง
+    //password ต้องมีทั้งตัวเลข ตัวอักษรพิมพ์เล็กพิมพ์ใหญ๋ผสมกัน
+    //ตำแหน่ง Seat ต้องไม่ซ้ำกันมีได้ไม่เกิน 250;
+    //user 1 คน ซื้อ Ticket ได้ 1 ใบ
+    // 
     
     /**
      * 
@@ -39,6 +42,12 @@ public class BoundedStack{
    public void push(String  s){
 
    }
+
+   public void pop(String s){
+
+   }
+
+   public void obse
 
 
 
