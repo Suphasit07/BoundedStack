@@ -5,6 +5,7 @@ import java.util.*;
  */
 // จิรายุ เขียวภักดี 6821651116
 // ศุภธิษณ์ กอประเสริฐสุด 6821651825
+
 public class BoundedStack{
     private final List<String> user;
     private final List<String> password;
@@ -22,6 +23,13 @@ public class BoundedStack{
     //ตำแหน่ง Seat ต้องไม่ซ้ำกันมีได้ไม่เกิน 250;
     //user 1 คน ซื้อ Ticket ได้ 1 ใบ
     // 
+
+    // safety form rep exposure:
+    //สร้าง Private final เพื่อไม่ให้เเก้ไขได้
+    //user เป็น private final
+    //password เป็น private final
+    //คัดลอกทั้งขาเข้าขาออก
+    //
     
     /**
      * 
