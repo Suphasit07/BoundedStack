@@ -79,6 +79,8 @@ public class BoundedStack {
         }
     }
 
+    // ===== Creator =====
+
     /**
      * 
      * @param capacity
@@ -90,20 +92,24 @@ public class BoundedStack {
         this.Seat = new ArrayList<>();
         CheckRep();
     }
+
     // ===== Mutators =====
 
     /**
-     * Mutators
-     * @param s
+     * @param user ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง
+     * @param password ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ต้องมีตัวอักษรมากกว่า 8 ตัว และต้องมีตัวพิมพ์เล็กพิมพ์ใหญ่ตัวเลขผสมกัน
+     * @param seat ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ต้องไม่มีมากกว่า 250 ที่นั่ง 
+     * @throws IllegalArgumentException ถ้า user password seat ไม่เป็นไปตามเงื่อนไขที่ต้องการ
+     * @return true ถ้าเพิ่มสำเร็จ , false ถ้ามีคนจองที่นั่งนี้ไว้แล้ว
      */
     public boolean add(String user,String password,String seat) {
-        if(user == null || user.isEmpty()) // เช็คว่า user เป็น null กับ ช่องว่างไหม
+        if(user == null || user.isEmpty())
             throw new IllegalArgumentException();
-        if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
+        if(password == null || password.isEmpty())
             throw new IllegalArgumentException();
-        if(this.Password.size() < MAX_PASSWORD)// เช็คว่า password มีมากกว่า 8 ตัวไหม
+        if(this.Password.size() < MAX_PASSWORD)
             throw new IllegalArgumentException();
-        if(seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
+        if(seat == null || seat.isEmpty())
             throw new IllegalArgumentException();
         if(this.User.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
             throw new IllegalArgumentException();
@@ -120,7 +126,14 @@ public class BoundedStack {
         return true;
     }
 
-    public boolean remove(String user,String password,String seat) {
+    /**
+     * ลบ Accout User กับ Seat 
+     * @param user ที่ชื่อซ้ำกัน
+     * @param seat จองที่นั่งเดียวกัน
+     * @return true ถ้าลบสำเร็จ , false ถ้าลบไม่สำเร็จ
+     */
+
+    public boolean remove(String user,String seat) {
         if(!(User.contains(user))) return false;
         User.remove(user);
         if(!(Seat.contains(seat))) return false;
@@ -156,6 +169,12 @@ public class BoundedStack {
     }
 
     // ===== Producer =====
+
+
+    
+
+    
+
 
 
 }
