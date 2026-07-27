@@ -7,10 +7,10 @@ import java.util.*;
 // ศุภธิษณ์ กอประเสริฐสุด 6821651825
 
 public class BoundedStack {
-    private final List<String> user;
-    private final List<String> password;
-    private final int ticket;
-    private final List<String> seat;
+    private final List<String> User;
+    private final List<String> Password;
+    private final int Ticket;
+    private final List<String> Seat;
     public static final int MAX_USER = 10;
     public static final int MAX_PASSWORD = 8;
     public static final int MAX_TICKET = 250;
@@ -39,25 +39,25 @@ public class BoundedStack {
     //
 
     private void CheckRep() {
-        assert user != null : "user is not null";
-        assert seat != null : "seat is not null";
-        assert ticket >= 0;
-        assert ticket <= MAX_TICKET;
-        assert user.size() <= MAX_USER;
-        assert seat.size() <= MAX_SEAT;
+        assert User != null : "user is not null";
+        assert Seat != null : "seat is not null";
+        assert Ticket >= 0;
+        assert Ticket <= MAX_TICKET;
+        assert User.size() <= MAX_USER;
+        assert Seat.size() <= MAX_SEAT;
         Set<String> seenUser = new HashSet<>();
-        for (String u : user) {
+        for (String u : User) {
             assert u != null;
             assert !u.isEmpty();
             assert seenUser.add(u);
         }
         Set<String> seenSeat = new HashSet<>();
-        for (String s : seat) {
+        for (String s : Seat) {
             assert s != null;
             assert !s.isEmpty();
             assert seenSeat.add(s);
         }
-        for (String pw : password) {
+        for (String pw : Password) {
             assert pw != null : "password is not null";
             assert !pw.isEmpty();
             assert pw.length() >= MAX_PASSWORD;
@@ -83,11 +83,11 @@ public class BoundedStack {
      * 
      * @param capacity
      */
-    public BoundedStack(int Ticket) {
-        this.user = new ArrayList<>();
-        this.password = new ArrayList<>();
-        this.ticket = Ticket;
-        this.seat = new ArrayList<>();
+    public BoundedStack(int ticket) {
+        this.User = new ArrayList<>();
+        this.Password = new ArrayList<>();
+        this.Ticket = ticket;
+        this.Seat = new ArrayList<>();
         CheckRep();
     }
 
@@ -100,24 +100,24 @@ public class BoundedStack {
             throw new IllegalArgumentException();
         if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
-        if(this.seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
+        if(seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
-        if(this.user.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
+        if(this.User.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
             throw new IllegalArgumentException();
-        if(this.seat.contains(seat)) //ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
+        if(this.Seat.contains(seat)) //ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
             throw new IllegalArgumentException();
-        if(this.seat.size() >= MAX_SEAT) //ตรวจสอบว่า seat มีที่นั่งเกินไหม
+        if(this.Seat.size() >= MAX_SEAT) //ตรวจสอบว่า seat มีที่นั่งเกินไหม
             throw new IllegalArgumentException();
-        if(this.seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
+        if(this.Seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
             throw new IllegalArgumentException();
-        this.user.add(user); //user ที่เพิ่มเข้ามานำไปต่อใน list user
-        this.password.add(password);//password ที่เพิ่มเข้ามานำไปต่อใน list password
-        this.seat.add(seat);//password ที่เพิ่มเข้ามานำไปต่อใน list password
+        this.User.add(user); //user ที่เพิ่มเข้ามานำไปต่อใน list user
+        this.Password.add(password);//password ที่เพิ่มเข้ามานำไปต่อใน list password
+        this.Seat.add(seat);//password ที่เพิ่มเข้ามานำไปต่อใน list password
         CheckRep();
         return true;
     }
 
-    public boolean remove(String user,String password,String seat) {
+    public boolean remove(String User,String Password,String Seat) {
 
         return true;
 
