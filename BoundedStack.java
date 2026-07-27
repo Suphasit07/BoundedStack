@@ -78,27 +78,47 @@ public class BoundedStack {
             assert hasUpper && hasLower && hasDigit;
         }
     }
-
+    // ===== Creator =====
     /**
      * 
      * @param capacity
      */
-    public BoundedStack(int ticket) {
+
+    public BoundedStack(List<String> UserAndSeat,int ticket){
         this.User = new ArrayList<>();
         this.Password = new ArrayList<>();
         this.Ticket = ticket;
         this.Seat = new ArrayList<>();
+        if(UserAndSeat == null) throw new IllegalArgumentException();
+        if(UserAndSeat.size() > MAX_SEAT) throw new IllegalArgumentException();
+        if(UserAndSeat.size() < 0) throw new IllegalArgumentException();
+        Set<String> seenUser = new HashSet<>();
+        for(String s : UserAndSeat){
+            if(s == "") throw new IllegalArgumentException();
+            if(s == null) throw new IllegalArgumentException();
+            if(!seenUser.add(s)) throw new IllegalArgumentException();
+        }
+        Set<String> seenSeat = new HashSet<>();
+        for(String s : UserAndSeat){
+            if(s == "") throw new IllegalArgumentException();
+            if(s == null) throw new IllegalArgumentException();
+            if(!seenSeat.add(s)) throw new IllegalArgumentException();
+        }
         CheckRep();
     }
 
+    // ===== Mutators =====
+
     /**
-     * 
+     * Mutators
      * @param s
      */
     public boolean add(String user,String password,String seat) {
         if(user == null || user.isEmpty()) // เช็คว่า user เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
         if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
+            throw new IllegalArgumentException();
+        if(this.Password.size() < MAX_PASSWORD)// เช็คว่า password มีมากกว่า 8 ตัวไหม
             throw new IllegalArgumentException();
         if(seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
@@ -117,14 +137,40 @@ public class BoundedStack {
         return true;
     }
 
-    public boolean remove(String User,String Password,String Seat) {
-
+    public boolean remove(String user,String password,String seat) {
+        if(!(User.contains(user))) return false;
+        User.remove(user);
+        if(!(Seat.contains(seat))) return false;
+        Seat.remove(seat);
+        CheckRep();
         return true;
-
     }
 
-    public void observe(String s) {
+    // ===== Observers =====
 
+    /**
+     * ตรวจสอบชื่อ User และ Seat ว่ามีอยู่จริงไหม
+     */
+
+    public boolean contains(String user,String seat) {
+        return (User.contains(user) || Seat.contains(seat));
     }
 
+    /**
+     * คืนจำนวนที่นั่งทั้งหมด
+     */
+
+    public int size(){
+        return Seat.size();
+    }
+
+    /**
+     * คืนจำนวนที่นั่งทั้งหมดตามลำดับ
+     */
+
+    public List<String> Seat(){
+        return new ArrayList<>(Seat);
+    }
+
+    // ===== Producer =====
 }
