@@ -24,7 +24,8 @@ public class BoundedStack {
     // ไม่มีชื่อ user,password,seat ที่เป็นสตริงว่าง
     // password ต้องมีมากกว่า 8 ตัว และต้องไม่เป็นช่องว่าง
     // password ต้องมีทั้งตัวเลข ตัวอักษรพิมพ์เล็กพิมพ์ใหญ๋ผสมกัน
-    // ตำแหน่ง Seat ต้องไม่ซ้ำกันมีได้ไม่เกิน 250;
+    // ตำแหน่ง Seat ต้องไม่ซ้ำกันและมีได้ไม่เกิน 250;
+    // ticket ซื้อได้ไม่เกิน 250 ตั๋ว
     // user 1 คน ซื้อ Ticket ได้ 1 ใบ
     //
 
@@ -40,6 +41,8 @@ public class BoundedStack {
     private void CheckRep() {
         assert user != null : "user is not null";
         assert seat != null : "seat is not null";
+        assert ticket >= 0;
+        assert ticket <= MAX_TICKET;
         assert user.size() <= MAX_USER;
         assert seat.size() <= MAX_SEAT;
         Set<String> seenUser = new HashSet<>();
