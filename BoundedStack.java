@@ -58,21 +58,24 @@ public class BoundedStack {
             assert seenSeat.add(s);
         }
         for (String pw : password) {
-        assert pw != null : "password is not null";
-        assert !pw.isEmpty();
-        assert pw.length() >= MAX_PASSWORD; 
-        
-        boolean hasUpper = false;
-        boolean hasLower = false;
-        boolean hasDigit = false;
-        for (int i = 0; i < pw.length(); i++) {
-            Character c = pw.charAt(i);
-            Character d = pw.charAt(i);
-            if(Character.isUpperCase(c)) hasUpper = true;
-            if(Character.isLowerCase(c)) hasLower = true;
-            if(Character.isDigit(d)) hasDigit = true;
-        }
-        assert hasUpper && hasLower && hasDigit;
+            assert pw != null : "password is not null";
+            assert !pw.isEmpty();
+            assert pw.length() >= MAX_PASSWORD;
+
+            boolean hasUpper = false;
+            boolean hasLower = false;
+            boolean hasDigit = false;
+            for (int i = 0; i < pw.length(); i++) {
+                Character c = pw.charAt(i);
+                Character d = pw.charAt(i);
+                if (Character.isUpperCase(c))
+                    hasUpper = true;
+                if (Character.isLowerCase(c))
+                    hasLower = true;
+                if (Character.isDigit(d))
+                    hasDigit = true;
+            }
+            assert hasUpper && hasLower && hasDigit;
         }
     }
 
@@ -92,8 +95,25 @@ public class BoundedStack {
      * 
      * @param s
      */
-    public void push(String s) {
-
+    public void push(String user,String password,String seat) {
+        if(user == null || user.isEmpty()) // เช็คว่า user เป็น null กับ ช่องว่างไหม
+            throw new IllegalArgumentException();
+        if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
+            throw new IllegalArgumentException();
+        if(this.seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
+            throw new IllegalArgumentException();
+        if(this.user.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
+            throw new IllegalArgumentException();
+        if(this.seat.contains(seat)) //ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
+            throw new IllegalArgumentException();
+        if(this.seat.size() >= MAX_SEAT) //ตรวจสอบว่า seat มีที่นั่งเกินไหม
+            throw new IllegalArgumentException();
+        if(this.seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
+            throw new IllegalArgumentException();
+        this.user.add(user);
+        this.password.add(password);
+        this.seat.add(seat);
+        CheckRep();
     }
 
     public void pop(String s) {
