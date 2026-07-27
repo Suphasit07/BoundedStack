@@ -78,18 +78,32 @@ public class BoundedStack {
             assert hasUpper && hasLower && hasDigit;
         }
     }
-
     // ===== Creator =====
-
     /**
      * 
      * @param capacity
      */
-    public BoundedStack(int ticket) {
+
+    public BoundedStack(List<String> UserAndSeat,int ticket){
         this.User = new ArrayList<>();
         this.Password = new ArrayList<>();
         this.Ticket = ticket;
         this.Seat = new ArrayList<>();
+        if(UserAndSeat == null) throw new IllegalArgumentException();
+        if(UserAndSeat.size() > MAX_SEAT) throw new IllegalArgumentException();
+        if(UserAndSeat.size() < 0) throw new IllegalArgumentException();
+        Set<String> seenUser = new HashSet<>();
+        for(String s : UserAndSeat){
+            if(s == "") throw new IllegalArgumentException();
+            if(s == null) throw new IllegalArgumentException();
+            if(!seenUser.add(s)) throw new IllegalArgumentException();
+        }
+        Set<String> seenSeat = new HashSet<>();
+        for(String s : UserAndSeat){
+            if(s == "") throw new IllegalArgumentException();
+            if(s == null) throw new IllegalArgumentException();
+            if(!seenSeat.add(s)) throw new IllegalArgumentException();
+        }
         CheckRep();
     }
 
@@ -109,7 +123,9 @@ public class BoundedStack {
             throw new IllegalArgumentException();
         if(Password.size() < MAX_PASSWORD)
             throw new IllegalArgumentException();
-        if(seat == null || seat.isEmpty())
+        if(this.Password.size() < MAX_PASSWORD)// เช็คว่า password มีมากกว่า 8 ตัวไหม
+            throw new IllegalArgumentException();
+        if(seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
         if(User.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
             throw new IllegalArgumentException();
