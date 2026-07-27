@@ -38,9 +38,8 @@ public class BoundedStack {
 
     private void CheckRep() {
         assert user != null : "user is not null";
-        assert password != null : "password is not null";
         assert seat != null : "seat is not null";
-        assert password.size() <= MAX_PASSWORD;
+        assert user.size() <= MAX_USER;
         assert seat.size() <= MAX_SEAT;
         Set<String> seen = new HashSet<>();
         for (String u : user) {
@@ -48,13 +47,28 @@ public class BoundedStack {
             assert u != "";
             assert seen.add(u);
         }
-        for (String pw : seen) {
-            assert pw != null;
-            assert pw != "";
-            assert (pw != pw.toLowerCase() || pw != pw.toUpperCase());
-            assert seen.add(pw);
+        for (String s : seat) {
+            assert s != null;
+            assert s != "";
+            assert seen.add(s);
         }
-
+        for (String pw : password) {
+        assert pw != null : "password is not null";
+        assert !pw.isEmpty();
+        assert pw.length() >= MAX_PASSWORD; 
+        
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDijit = false;
+        for (int i = 0; i < pw.length(); i++) {
+            Character c = pw.charAt(i);
+            Character d = pw.charAt(i);
+            if(Character.isUpperCase(c)) hasUpper = true;
+            if(Character.isLowerCase(c)) hasLower = true;
+            if(Character.isDigit(d)) hasDijit = true;
+        }
+        assert hasUpper && hasLower && hasDijit;
+        }
     }
 
     /**
@@ -76,12 +90,12 @@ public class BoundedStack {
 
     }
 
-   public void pop(String s){
+    public void pop(String s) {
 
-   }
+    }
 
-   public void observe(String s)
+    public void observe(String s) {
 
-
+    }
 
 }
