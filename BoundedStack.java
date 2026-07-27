@@ -110,34 +110,46 @@ public class BoundedStack {
     // ===== Mutators =====
 
     /**
-     * Mutators
-     * @param s
+     * @param user ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง
+     * @param password ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ต้องมีตัวอักษรมากกว่า 8 ตัว และต้องมีตัวพิมพ์เล็กพิมพ์ใหญ่ตัวเลขผสมกัน
+     * @param seat ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ต้องไม่มีมากกว่า 250 ที่นั่ง 
+     * @throws IllegalArgumentException ถ้า user password seat ไม่เป็นไปตามเงื่อนไขที่ต้องการ
+     * @return true ถ้าเพิ่มสำเร็จ , false ถ้ามีคนจองที่นั่งนี้ไว้แล้ว
      */
     public boolean add(String user,String password,String seat) {
-        if(user == null || user.isEmpty()) // เช็คว่า user เป็น null กับ ช่องว่างไหม
+        if(user == null || user.isEmpty())
             throw new IllegalArgumentException();
-        if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
+        if(password == null || password.isEmpty())
+            throw new IllegalArgumentException();
+        if(Password.size() < MAX_PASSWORD)
             throw new IllegalArgumentException();
         if(this.Password.size() < MAX_PASSWORD)// เช็คว่า password มีมากกว่า 8 ตัวไหม
             throw new IllegalArgumentException();
         if(seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
-        if(this.User.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
+        if(User.contains(user)) //ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
             throw new IllegalArgumentException();
-        if(this.Seat.contains(seat)) //ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
+        if(Seat.contains(seat)) //ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
             throw new IllegalArgumentException();
-        if(this.Seat.size() >= MAX_SEAT) //ตรวจสอบว่า seat มีที่นั่งเกินไหม
+        if(Seat.size() >= MAX_SEAT) //ตรวจสอบว่า seat มีที่นั่งเกินไหม
             throw new IllegalArgumentException();
-        if(this.Seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
+        if(Seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
             throw new IllegalArgumentException();
-        this.User.add(user); //user ที่เพิ่มเข้ามานำไปต่อใน list user
-        this.Password.add(password);//password ที่เพิ่มเข้ามานำไปต่อใน list password
-        this.Seat.add(seat);//password ที่เพิ่มเข้ามานำไปต่อใน list password
+        User.add(user); //user ที่เพิ่มเข้ามานำไปต่อใน list user
+        Password.add(password);//password ที่เพิ่มเข้ามานำไปต่อใน list password
+        Seat.add(seat);//password ที่เพิ่มเข้ามานำไปต่อใน list password
         CheckRep();
         return true;
     }
 
-    public boolean remove(String user,String password,String seat) {
+    /**
+     * ลบ Accout User กับ Seat 
+     * @param user ที่ชื่อซ้ำกัน
+     * @param seat จองที่นั่งเดียวกัน
+     * @return true ถ้าลบสำเร็จ , false ถ้าลบไม่สำเร็จ
+     */
+
+    public boolean remove(String user,String seat) {
         if(!(User.contains(user))) return false;
         User.remove(user);
         if(!(Seat.contains(seat))) return false;
@@ -173,4 +185,12 @@ public class BoundedStack {
     }
 
     // ===== Producer =====
+
+
+    
+
+    
+
+
+
 }
