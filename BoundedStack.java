@@ -95,7 +95,7 @@ public class BoundedStack {
      * 
      * @param s
      */
-    public void push(String user,String password,String seat) {
+    public boolean add(String user,String password,String seat) {
         if(user == null || user.isEmpty()) // เช็คว่า user เป็น null กับ ช่องว่างไหม
             throw new IllegalArgumentException();
         if(password == null || password.isEmpty()) // เช็คว่า password เป็น null กับ ช่องว่างไหม
@@ -110,13 +110,16 @@ public class BoundedStack {
             throw new IllegalArgumentException();
         if(this.seat.size() >= MAX_TICKET) //ตรวจสอบว่า seat มีที่นั่งมากกว่า ticket ไหม
             throw new IllegalArgumentException();
-        this.user.add(user);
-        this.password.add(password);
-        this.seat.add(seat);
+        this.user.add(user); //user ที่เพิ่มเข้ามานำไปต่อใน list user
+        this.password.add(password);//password ที่เพิ่มเข้ามานำไปต่อใน list password
+        this.seat.add(seat);//password ที่เพิ่มเข้ามานำไปต่อใน list password
         CheckRep();
+        return true;
     }
 
-    public void pop(String s) {
+    public boolean remove(String user,String password,String seat) {
+
+        return true;
 
     }
 
