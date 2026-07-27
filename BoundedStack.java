@@ -13,6 +13,7 @@ public class BoundedStack {
     private final List<String> seat;
     public static final int MAX_USER = 10;
     public static final int MAX_PASSWORD = 8;
+    public static final int MAX_TICKET = 250;
     public static final int MAX_SEAT = 250;
     // Abstraction Function:
     // AF(user,password,ticket,seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat
@@ -41,16 +42,17 @@ public class BoundedStack {
         assert seat != null : "seat is not null";
         assert user.size() <= MAX_USER;
         assert seat.size() <= MAX_SEAT;
-        Set<String> seen = new HashSet<>();
+        Set<String> seenUser = new HashSet<>();
         for (String u : user) {
             assert u != null;
-            assert u != "";
-            assert seen.add(u);
+            assert !u.isEmpty();
+            assert seenUser.add(u);
         }
+        Set<String> seenSeat = new HashSet<>();
         for (String s : seat) {
             assert s != null;
-            assert s != "";
-            assert seen.add(s);
+            assert !s.isEmpty();
+            assert seenSeat.add(s);
         }
         for (String pw : password) {
         assert pw != null : "password is not null";
@@ -59,15 +61,15 @@ public class BoundedStack {
         
         boolean hasUpper = false;
         boolean hasLower = false;
-        boolean hasDijit = false;
+        boolean hasDigit = false;
         for (int i = 0; i < pw.length(); i++) {
             Character c = pw.charAt(i);
             Character d = pw.charAt(i);
             if(Character.isUpperCase(c)) hasUpper = true;
             if(Character.isLowerCase(c)) hasLower = true;
-            if(Character.isDigit(d)) hasDijit = true;
+            if(Character.isDigit(d)) hasDigit = true;
         }
-        assert hasUpper && hasLower && hasDijit;
+        assert hasUpper && hasLower && hasDigit;
         }
     }
 
@@ -80,6 +82,7 @@ public class BoundedStack {
         this.password = new ArrayList<>();
         this.ticket = Ticket;
         this.seat = new ArrayList<>();
+        CheckRep();
     }
 
     /**
