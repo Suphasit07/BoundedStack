@@ -36,7 +36,7 @@ public class BoundedStack {
     // คัดลอกทั้งขาเข้าขาออก
     //
 
-    void CheckRep() {
+    public void CheckRep() {
         assert User != null : "user is not null";
         assert Seat != null : "seat is not null";
         assert User.size() <= MAX_USER;
@@ -145,10 +145,24 @@ public class BoundedStack {
     public boolean addPassword(String password) {
         if (password == null || password.isEmpty())
             throw new IllegalArgumentException();
-        if (Password.size() < MAX_PASSWORD)
+        if (password.length() <= MAX_PASSWORD) // เช็คว่า password มีมากกว่า 8 ตัวไหม
             throw new IllegalArgumentException();
-        if (this.Password.size() < MAX_PASSWORD)// เช็คว่า password มีมากกว่า 8 ตัวไหม
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        for (int i = 0; i < password.length(); i++) {
+            Character c = password.charAt(i);
+            if (Character.isUpperCase(c))
+                hasUpper = true;
+            if (Character.isLowerCase(c))
+                hasLower = true;
+            if (Character.isDigit(c))
+                hasDigit = true;
+        }
+        if (!(hasUpper && hasLower && hasDigit)) {
             throw new IllegalArgumentException();
+        }
+        assert hasUpper && hasLower && hasDigit;
         Password.add(password);// password ที่เพิ่มเข้ามานำไปต่อใน list password
         CheckRep();
         return true;
@@ -225,11 +239,6 @@ public class BoundedStack {
 
     public List<String> Seat() {
         return new ArrayList<>(Seat);
-    }
-
-    public static boolean CheckRep(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'CheckRep'");
     }
 
     // ===== Producer =====

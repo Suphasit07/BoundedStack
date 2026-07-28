@@ -25,13 +25,60 @@ public class BoundedStackTest {
                     + " - re-run with: java -ea BoundedStackTest\n");
         }
         System.out.println("=== BounedStack Test ===\n");
+        testCreators();
         testAddUser();
         testAddPassword();
         testAddSeat();
 
     }
+    // --- Creators
+    private static void testCreators() {
+        System.out.println("-- Creators --");
+
+        BoundedStack empty = new BoundedStack();
+        check("new() -> empty",empty.size() == 0);
+        check("new -> contains nothing",!empty.containsUser( "anything") && !empty.containsSeat("anything"));
+
+        BoundedStack b = new BoundedStack(Arrays.asList("A1","A2","A3"));
+        check("new(list) -> size 3", b.size() == 3);
+        check("new(list) -> contains A1",b.containsSeat("A1"));
+        check("test(list) -> preserves order",b.Seat().equals(Arrays.asList("A1","A2","A3")));
+
+        // boundary: list ว่างคือขอบล่างที่ถูกต้อง
+        BoundedStack fromEmpty = new BoundedStack(new ArrayList<String>());
+        check("new(empty list) -> empty", fromEmpty.size() == 0);
+
+         // input ที่ผิดเงื่อนไขต้องโยน exception ไม่ใช่ปล่อยผ่าน
+        Boolean threwDup = false;
+        try {
+            new BoundedStack(Arrays.asList("A1","A1"));
+        } catch (IllegalArgumentException e) {
+            threwDup = true;
+        }
+        check("new(duplicates) -> throws IllegalArgumentException", threwDup);
+
+        boolean threwNull = false;
+        try {
+            new BoundedStack(Arrays.asList("A1",null));
+        } catch (IllegalArgumentException e) {
+            threwNull = true;
+        }
+        check("new(list with null) -> throws IllegalArgumentException", threwNull);
+
+        boolean threwNullList = false;
+        try {
+            new BoundedStack(null);
+        } catch (IllegalArgumentException e) {
+            threwNullList = true;
+        }
+        check("new(null) -> throws IllegalArgumentException", threwNullList);
+
+    }
+    
+
     // --- Mutator: add
     private static void testAddUser(){
+        System.out.println("-- Mutators --\n");
         System.out.println("-- AddUser --");
         BoundedStack u = new BoundedStack();
         boolean threwEmpty = false;
@@ -77,7 +124,6 @@ public class BoundedStackTest {
             threwNull = true;
         }
         check("addPassword(null) -> throw IllegalArgumentException",threwNull);
-        check("pw len > MAX_PASSWORD", BoundedStack.CheckRep("aaAA12345"));
     }
     private static void testAddSeat(){
         System.out.println("-- AddSeat --");
