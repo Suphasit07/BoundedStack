@@ -192,7 +192,7 @@ public class BoundedStack {
      * 
      * @param user ที่ชื่อซ้ำกัน
      * @param seat จองที่นั่งเดียวกัน
-     * @return true ถ้าลบสำเร็จ , false ถ้าลบไม่สำเร็จ
+     * @return true ถ้า user มีชื่อที่ซ้ำกันและ seat จองที่นั่งเดียวกัน , false ถ้า user มีชื่อที่ไม่ซ้ำกันและ seat ไม่จองที่นั่งเดียวกัน
      */
 
     public boolean removeUser(String user) {
