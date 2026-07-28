@@ -1,6 +1,7 @@
 import java.util.*;
-    /**
- * Test runner 
+
+/**
+ * Test runner
  */
 public class BoundedStackTest {
 
@@ -17,6 +18,7 @@ public class BoundedStackTest {
             System.out.println("[FAIL] " + name);
         }
     }
+
     public static void main(String[] args) {
         boolean assertsOn = false;
         assert assertsOn = true;
@@ -29,29 +31,32 @@ public class BoundedStackTest {
         testAddUser();
         testAddPassword();
         testAddSeat();
+        testremoveUser();
+        testremoveSeat();
 
     }
+
     // --- Creators
     private static void testCreators() {
-        System.out.println("-- Creators --");
+        System.out.println("-- Creators --\n");
 
         BoundedStack empty = new BoundedStack();
-        check("new() -> empty",empty.size() == 0);
-        check("new -> contains nothing",!empty.containsUser( "anything") && !empty.containsSeat("anything"));
+        check("new() -> empty", empty.size() == 0);
+        check("new -> contains nothing", !empty.containsUser("anything") && !empty.containsSeat("anything"));
 
-        BoundedStack b = new BoundedStack(Arrays.asList("A1","A2","A3"));
+        BoundedStack b = new BoundedStack(Arrays.asList("A1", "A2", "A3"));
         check("new(list) -> size 3", b.size() == 3);
-        check("new(list) -> contains A1",b.containsSeat("A1"));
-        check("test(list) -> preserves order",b.Seat().equals(Arrays.asList("A1","A2","A3")));
+        check("new(list) -> contains A1", b.containsSeat("A1"));
+        check("test(list) -> preserves order", b.Seat().equals(Arrays.asList("A1", "A2", "A3")));
 
         // boundary: list ว่างคือขอบล่างที่ถูกต้อง
         BoundedStack fromEmpty = new BoundedStack(new ArrayList<String>());
         check("new(empty list) -> empty", fromEmpty.size() == 0);
 
-         // input ที่ผิดเงื่อนไขต้องโยน exception ไม่ใช่ปล่อยผ่าน
+        // input ที่ผิดเงื่อนไขต้องโยน exception ไม่ใช่ปล่อยผ่าน
         Boolean threwDup = false;
         try {
-            new BoundedStack(Arrays.asList("A1","A1"));
+            new BoundedStack(Arrays.asList("A1", "A1"));
         } catch (IllegalArgumentException e) {
             threwDup = true;
         }
@@ -59,7 +64,7 @@ public class BoundedStackTest {
 
         boolean threwNull = false;
         try {
-            new BoundedStack(Arrays.asList("A1",null));
+            new BoundedStack(Arrays.asList("A1", null));
         } catch (IllegalArgumentException e) {
             threwNull = true;
         }
@@ -72,14 +77,13 @@ public class BoundedStackTest {
             threwNullList = true;
         }
         check("new(null) -> throws IllegalArgumentException", threwNullList);
-
     }
-    
 
-    // --- Mutator: add
-    private static void testAddUser(){
-        System.out.println("-- Mutators --\n");
-        System.out.println("-- AddUser --");
+    // --- Mutator : addUser ต้องรักษาลำดับและกันชื่อ User ว่าซ้ำกันไหม ---
+
+    private static void testAddUser() {
+        System.out.println("\n-- Mutators --\n");
+        System.out.println("\n-- AddUser --\n");
         BoundedStack u = new BoundedStack();
         boolean threwEmpty = false;
         try {
@@ -95,7 +99,7 @@ public class BoundedStackTest {
         } catch (IllegalArgumentException e) {
             threwNull = true;
         }
-        check("addUser(null) -> throw IllegalArgumentException",threwNull);
+        check("addUser(null) -> throw IllegalArgumentException", threwNull);
 
         boolean threwDup = false;
         try {
@@ -107,8 +111,10 @@ public class BoundedStackTest {
         check("addUser(duplicate) -> throw IllegalArgumentException", threwDup);
     }
 
-    private static void testAddPassword(){
-        System.out.println("-- AddPassword --");
+    // --- Mutator : addPassword ตรวจสอบว่า Password ผ่านเงื่อนไขที่ต้องการไหม ---
+
+    private static void testAddPassword() {
+        System.out.println("\n-- AddPassword --\n");
         BoundedStack pw = new BoundedStack();
         boolean threwEmpty = false;
         try {
@@ -123,10 +129,13 @@ public class BoundedStackTest {
         } catch (IllegalArgumentException e) {
             threwNull = true;
         }
-        check("addPassword(null) -> throw IllegalArgumentException",threwNull);
+        check("addPassword(null) -> throw IllegalArgumentException", threwNull);
     }
-    private static void testAddSeat(){
-        System.out.println("-- AddSeat --");
+
+    // --- Mutator : addSeat ต้องรักษาลำดับและกัน Seat ด้วยว่าที่นั่งซ้ำกันไหม ---
+
+    private static void testAddSeat() {
+        System.out.println("\n-- AddSeat --\n");
         BoundedStack s = new BoundedStack();
         boolean threwEmpty = false;
         try {
@@ -150,10 +159,28 @@ public class BoundedStackTest {
             threwDup = true;
         }
         check("addSeat(dupicate) -> throw IllegalArgumentException", threwDup);
-        check("failed adds leave BoundedStack unchanged",s.size() <= 250);
+        check("failed adds leave BoundedStack unchanged", s.size() <= 250);
     }
 
+    // --- Mutator : RemoveUser ลบ user ที่มีชื่อซ้ำกัน ---
+    private static void testremoveUser(){
+        System.out.println("\n--RemoveUser--\n");
+        BoundedStack u = new BoundedStack();
+        u.addUser("AAAA"); // เพิ่ม User เข้าไปก่อน
+        check("remove(AAAA) -> returns true",u.removeUser("AAAA")); // ถ้ามี user ชื่อนี้จริงจะทำการ remove
+        check("after remove -> not contains(AAAA)", !u.containsUser("AAAA")); //ตรวจสอบหลังจาก remove ไปแล้ว user ชื่อนี้หายไปจริงไหม
+        check("dont have user -> return false", !u.removeUser("AAAA")); // ถ้าไม่มี user เราจะ return false ไปเลย
+    }
 
-    
-    
+    // --- Mutator : RemoveSeat ลบ seat ที่มีการจองที่นั่งซ้ำกัน ---
+    private static void testremoveSeat(){
+        System.out.println("\n--RemoveSeat--\n");
+        BoundedStack s = new BoundedStack();
+        s.addSeat("A1"); //เพิ่ม Seat เข้าไปก่อน
+        check("remove(A1) -> returns true", s.removeSeat("A1"));
+        check("after remove -> not contains(A1)", !s.containsSeat("A1"));
+        check("dont have seat -> return false", !s.removeSeat("A1"));
+
+    }
+
 }
