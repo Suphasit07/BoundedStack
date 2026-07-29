@@ -27,8 +27,6 @@ public class BoundedStack {
     // user เป็น private final
     // password เป็น private final
     // seat เป็น private final
-    // PasswordOwner เป็น private final
-    // SeatOwner เป็น private final
     // คัดลอกทั้งขาเข้าขาออก
 
     public void CheckRep() {
