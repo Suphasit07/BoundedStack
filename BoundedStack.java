@@ -232,39 +232,30 @@ public class BoundedStack {
 
     // ===== Producer =====
     /**
-     * คืน BoundedStack ใหม่ที่มีรายชื่อผู้ใช้เดียวกันแต่สลับลำดับ
-     * 
+     * เปลี่ยนชื่อ user ใหม่ 
      * ระวัง : ห้ามแก้ลิสต์ผู้ใช้เดิม (User) เด็ดขาด
-     * 
-     * @return BoundedStack ใหม่ที่มีรายชื่อผู้ใช้สลับลำดับแล้ว
+     * @param changeUserName ถ้าชื่อ user ใหม่ซ้ำกับชื่อ user ที่มีอยู่แล้วหรือชื่อที่ซ้ำกัน จะทำการ throw new    IllegalArgumentException
+     * @return ชื่อ user ที่เปลี่ยนใหม่แล้ว
      */
+    public BoundedStack changeUserName(String original,String change){
+        if(original == null || original.isEmpty() || !User.contains(original))
+            throw new IllegalArgumentException();
+        if(change == null || change.isEmpty() || change.length() > MAX_USER)
+            throw new IllegalArgumentException();
+        if(User.contains(change))
+            throw new IllegalArgumentException();
 
-    public BoundedStack shuffledUser() {
-        List<String> copy = new ArrayList<>(User);
-        Collections.shuffle(copy);
-        return new BoundedStack(copy);
-    }
-
-    public String toStringUser() {
-        return User.toString();
-    }
-
-    /**
-     * คืน BoundedStack ใหม่ที่มีรายการที่นั่งเดียวกันแต่สลับลำดับ
-     * 
-     * ระวัง : ห้ามแก้ลิสต์ที่นั่งเดิม (Seat) เด็ดขาด
-     * 
-     * @return BoundedStack ใหม่ที่มีรายการที่นั่งสลับลำดับแล้ว
-     */
-
-    public BoundedStack shuffledSeat() {
-        List<String> copy1 = new ArrayList<>(Seat);
-        Collections.shuffle(copy1);
-        return new BoundedStack(copy1);
-    }
-
-    public String toStringSeat() {
-        return Seat.toString();
+        BoundedStack newUser = new BoundedStack();
+        for (int i = 0; i < User.size(); i++) {
+            String name;
+            if(User.get(i).equals(original)){
+                name = change;
+            }else{
+                name = User.get(i);
+            }
+            newUser.push(name, Password.get(i), Seat.get(i));
+        }
+        return newUser;
     }
 
 }
