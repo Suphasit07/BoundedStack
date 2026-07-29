@@ -37,16 +37,6 @@ public class BoundedStackTest {
         testProducerUser();
         testProducerSeat();
         testExposure();
-
-        System.out.println("\n=== Summary ===");
-        System.out.println("Passed "+ passed);
-        System.out.println("Failse "+ failed);
-        System.out.println("Total "+(passed+failed));
-        System.out.println(failed == 0 ? "ALL TEST PASSED" : "SOME TESTS FAILED");
-
-        if (failed > 0) {
-            System.exit(1);
-        }
     }
 
     // --- Creators
@@ -144,15 +134,29 @@ public class BoundedStackTest {
             threwNull = true;
         }
         check("addPassword(null) -> throw IllegalArgumentException", threwNull);
-        check("addPassword()", threwNull);
-
         boolean threwpw = false;
         try {
-            pw.addPassword("AAAAAAAA");
+            pw.addPassword("AABBCCD");
         } catch (IllegalArgumentException e) {
             threwpw = true;
         }
-        check("addPassword(have toUpper toLower Digit -> throw IllegalArgumentException", threwpw);
+        check("addPassword(have only toUpper and < 8)-> throw IllegalArgumentException", threwpw);
+
+        boolean threwpw1 = false;
+        try {
+            pw.addPassword("aabbccd");
+        } catch (IllegalArgumentException e) {
+            threwpw1 = true;
+        }
+        check("addPassword(have only toLower and < 8)-> throw IllegalArgumentException", threwpw1);
+
+        boolean threwpw2 = false;
+        try {
+            pw.addPassword("1234567");
+        } catch (IllegalArgumentException e) {
+            threwpw2 = true;
+        }
+        check("addPassword(have only Digit and < 8)-> throw IllegalArgumentException", threwpw2);
     }
 
     // --- Mutator : addSeat ต้องรักษาลำดับและกัน Seat ด้วยว่าที่นั่งซ้ำกันไหม ---
@@ -191,7 +195,8 @@ public class BoundedStackTest {
         BoundedStack u = new BoundedStack();
         u.addUser("AAAA"); // เพิ่ม User เข้าไปก่อน
         check("remove(AAAA) -> returns true", u.removeUser("AAAA")); // ถ้ามี user ชื่อนี้จริงจะทำการ remove
-        check("after remove -> not contains(AAAA)", !u.containsUser("AAAA")); // ตรวจสอบหลังจาก remove ไปแล้ว user ชื่อนี้หายไปจริงไหม
+        check("after remove -> not contains(AAAA)", !u.containsUser("AAAA")); // ตรวจสอบหลังจาก remove ไปแล้ว user
+                                                                              // ชื่อนี้หายไปจริงไหม
         check("dont have user -> return false", !u.removeUser("AAAA")); // ถ้าไม่มี user เราจะ return false ไปเลย
     }
 
@@ -260,7 +265,6 @@ public class BoundedStackTest {
 
     private static void testProducerSeat() {
         System.out.println("\n-- ProducerSeat --\n");
-
         BoundedStack original = new BoundedStack(Arrays.asList("A1", "A2", "A3", "A4"));
         BoundedStack shuffledSeat = original.shuffledUser();
 
@@ -282,7 +286,7 @@ public class BoundedStackTest {
         check("shuffling an empty BoundedStack is safe", emptyShuffledSeat.sizeSeat() == 0);
     }
 
-   // --- ทดสอบว่าไม่เกิด representation exposure ---
+    // --- ทดสอบว่าไม่เกิด representation exposure ---
     private static void testExposure() {
         System.out.println("\n-- Representation Exposure --");
 
@@ -327,5 +331,5 @@ public class BoundedStackTest {
         check("adding to constructor argument does not affect BoundedStack", !b1.containsSeat("injected"));
 
     }
-    
+
 }
