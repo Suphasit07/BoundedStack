@@ -135,6 +135,14 @@ public class BoundedStackTest {
         }
         check("addPassword(null) -> throw IllegalArgumentException", threwNull);
         check("addPassword()", threwNull);
+
+        boolean threwpw = false;
+        try {
+            pw.addPassword("AAAAAAAA");
+        } catch (IllegalArgumentException e) {
+            threwpw = true;
+        }
+        check("addPassword(have toUpper toLower Digit -> throw IllegalArgumentException", threwpw);
     }
 
     // --- Mutator : addSeat ต้องรักษาลำดับและกัน Seat ด้วยว่าที่นั่งซ้ำกันไหม ---
@@ -242,6 +250,7 @@ public class BoundedStackTest {
 
     private static void testProducerSeat() {
         System.out.println("\n-- ProducerSeat --\n");
+
         BoundedStack original = new BoundedStack(Arrays.asList("A1", "A2", "A3", "A4"));
         BoundedStack shuffledSeat = original.shuffledUser();
 
@@ -262,12 +271,51 @@ public class BoundedStackTest {
         BoundedStack emptyShuffledSeat = new BoundedStack().shuffledSeat();
         check("shuffling an empty BoundedStack is safe", emptyShuffledSeat.sizeSeat() == 0);
     }
-    // --- ทดสอบว่าไม่เกิด representation exposure ---
-    private static void testExposure(){
+
+   // --- ทดสอบว่าไม่เกิด representation exposure ---
+    private static void testExposure() {
+        System.out.println("\n-- Representation Exposure --");
+
+        // ขาออก : แก้ list ที่ได้จาก User(),Seat() ต้องไม่กระทบ rep
+        BoundedStack s = new BoundedStack();
+        s.addUser("AAAA");
+        s.addSeat("A1");
+
+        List<String> got = s.User();
+        got.clear();
+        check("clearing result of User() does not affect BoundStack", s.sizeUser() == 1);
+
+        got = s.User();
+        got.add("injected");
+        check("adding to result of User() does not affect BoundStack",
+                s.sizeUser() == 1 && !s.containsUser("injected"));
+        check("User() returns a fresh list each call", s.User() != s.User()); // user ต้องเป็นคนละ object
+
+        List<String> got1 = s.Seat();
+        got1.clear();
+        check("clearing result of Seat() does not affect BoundStack", s.sizeSeat() == 1);
+
+        got1 = s.Seat();
+        got1.add("injected");
+        check("adding to result of Seat() does not affect BoundStack",
+                s.sizeSeat() == 1 && !s.containsSeat("injected"));
+        check("Seat() returns a fresh list each call", s.Seat() != s.Seat()); // seat ต้องเป็นคนละ object
+
+        // ขาเข้า : แก้ list ที่ส่งให้ constructor ต้องไม่กระทบ rep
+        List<String> input = new ArrayList<String>(Arrays.asList("AAAA", "BBBB"));
+        BoundedStack b = new BoundedStack(input);
+        input.clear();
+        check("clearing constructor argument does not affect BoundedStack", b.sizeUser() == 2);
+        input.add("injected");
+        check("adding to constructor argument does not affect BoundedStack", !b.containsUser("injected"));
+
+        List<String> input1 = new ArrayList<String>(Arrays.asList("A1", "A2"));
+        BoundedStack b1 = new BoundedStack(input1);
+        input1.clear();
+        check("clearing constructor argument does not affect BoundedStack", b1.sizeSeat() == 2);
+        input1.add("injected");
+        check("adding to constructor argument does not affect BoundedStack", !b1.containsSeat("injected"));
 
     }
     
-
-
-
 }
