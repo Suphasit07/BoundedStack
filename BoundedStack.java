@@ -10,11 +10,11 @@ public class BoundedStack {
     private final List<String> User;
     private final List<String> Password;
     private final List<String> Seat;
-    public static final int MAX_USER = 10;
+    public static final int MAX_USER = 20;
     public static final int MAX_PASSWORD = 8;
     public static final int MAX_SEAT = 250;
     // Abstraction Function:
-    // AF(user,password,ticket,seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat
+    // AF(user,password,seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat
     // ตามลำดับ)
 
     // Representation Invariant:
@@ -23,15 +23,13 @@ public class BoundedStack {
     // password ต้องมีมากกว่า 8 ตัว และต้องไม่เป็นช่องว่าง
     // password ต้องมีทั้งตัวเลข ตัวอักษรพิมพ์เล็กพิมพ์ใหญ๋ผสมกัน
     // ตำแหน่ง Seat ต้องไม่ซ้ำกันและมีได้ไม่เกิน 250;
-    // ticket ซื้อได้ไม่เกิน 250 ตั๋ว
-    // user 1 คน ซื้อ Ticket ได้ 1 ใบ
+    // user 1 คน จองที่นั่งได้ 1 ที่
     //
 
     // safety form rep exposure:
     // สร้าง Private final เพื่อไม่ให้เเก้ไขได้
     // user เป็น private final
     // password เป็น private final
-    // ticket เป็น private final
     // seat เป็น private final
     // คัดลอกทั้งขาเข้าขาออก
     //
@@ -115,6 +113,8 @@ public class BoundedStack {
             if (!seenSeat.add(s))
                 throw new IllegalArgumentException();
         }
+        this.User.addAll(UserAndSeat);
+        this.Seat.addAll(UserAndSeat);
         CheckRep();
     }
 
@@ -128,7 +128,9 @@ public class BoundedStack {
     public boolean addUser(String user) {
         if (user == null || user.isEmpty())
             throw new IllegalArgumentException();
-        if (User.contains(user)) // ตรวจสอบว่า user คนนี้ซื้อตั๋วไปยัง(user 1 คนต่อ 1 ticket)
+        if(user.length() > MAX_USER) // ตรวจสอบว่าชื่อ user มีตัวอักษรเกิน 20 ตัวไหม
+            throw new IllegalArgumentException();
+        if (User.contains(user)) // ตรวจสอบว่า user คนนี้จองที่นั่งไปยัง(1 user 1 seat)
             throw new IllegalArgumentException();
         User.add(user); // user ที่เพิ่มเข้ามานำไปต่อใน list user
         CheckRep();
@@ -226,11 +228,25 @@ public class BoundedStack {
     }
 
     /**
+     * คืนจำนวน user ทั้งหมด
+     */
+    public int sizeUser(){
+        return User.size();
+    }
+
+    /**
      * คืนจำนวนที่นั่งทั้งหมด
      */
 
-    public int size() {
+    public int sizeSeat() {
         return Seat.size();
+    }
+
+    /**
+     * คืนจำนวน User ทั้งหมดตามลำดับ
+     */
+    public List<String> User(){
+        return new ArrayList<>(User);
     }
 
     /**
@@ -242,5 +258,40 @@ public class BoundedStack {
     }
 
     // ===== Producer =====
+    /**
+     * คืน BoundedStack ใหม่ที่มีรายชื่อผู้ใช้เดียวกันแต่สลับลำดับ
+     * 
+     * ระวัง : ห้ามแก้ลิสต์ผู้ใช้เดิม (User) เด็ดขาด
+     * 
+     * @return BoundedStack ใหม่ที่มีรายชื่อผู้ใช้สลับลำดับแล้ว
+     */
+
+    public BoundedStack shuffledUser(){
+        List<String> copy = new ArrayList<>(User);
+        Collections.shuffle(copy);
+        return new BoundedStack(copy);
+    }
+
+    public String toStringUser(){
+        return User.toString();
+    }
+
+    /**
+     * คืน BoundedStack ใหม่ที่มีรายการที่นั่งเดียวกันแต่สลับลำดับ
+     * 
+     * ระวัง : ห้ามแก้ลิสต์ที่นั่งเดิม (Seat) เด็ดขาด
+     * 
+     * @return BoundedStack ใหม่ที่มีรายการที่นั่งสลับลำดับแล้ว
+     */
+    
+    public BoundedStack shuffledSeat(){
+        List<String> copy1 = new ArrayList<>(Seat);
+        Collections.shuffle(copy1);
+        return new BoundedStack(copy1);
+    }
+
+    public String toStringSeat(){
+        return Seat.toString();
+    }
 
 }

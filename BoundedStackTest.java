@@ -33,7 +33,10 @@ public class BoundedStackTest {
         testAddSeat();
         testremoveUser();
         testremoveSeat();
-
+        testObservers();
+        testProducerUser();
+        testProducerSeat();
+        testExposure();
     }
 
     // --- Creators
@@ -41,17 +44,17 @@ public class BoundedStackTest {
         System.out.println("-- Creators --\n");
 
         BoundedStack empty = new BoundedStack();
-        check("new() -> empty", empty.size() == 0);
+        check("new() -> empty", empty.sizeUser() == 0);
         check("new -> contains nothing", !empty.containsUser("anything") && !empty.containsSeat("anything"));
 
         BoundedStack b = new BoundedStack(Arrays.asList("A1", "A2", "A3"));
-        check("new(list) -> size 3", b.size() == 3);
+        check("new(list) -> size 3", b.sizeSeat() == 3);
         check("new(list) -> contains A1", b.containsSeat("A1"));
         check("test(list) -> preserves order", b.Seat().equals(Arrays.asList("A1", "A2", "A3")));
 
         // boundary: list ว่างคือขอบล่างที่ถูกต้อง
         BoundedStack fromEmpty = new BoundedStack(new ArrayList<String>());
-        check("new(empty list) -> empty", fromEmpty.size() == 0);
+        check("new(empty list) -> empty", fromEmpty.sizeSeat() == 0);
 
         // input ที่ผิดเงื่อนไขต้องโยน exception ไม่ใช่ปล่อยผ่าน
         Boolean threwDup = false;
@@ -82,7 +85,7 @@ public class BoundedStackTest {
     // --- Mutator : addUser ต้องรักษาลำดับและกันชื่อ User ว่าซ้ำกันไหม ---
 
     private static void testAddUser() {
-        System.out.println("\n-- Mutators --\n");
+        System.out.println("\n-- Mutators --");
         System.out.println("\n-- AddUser --\n");
         BoundedStack u = new BoundedStack();
         boolean threwEmpty = false;
@@ -109,6 +112,7 @@ public class BoundedStackTest {
             threwDup = true;
         }
         check("addUser(duplicate) -> throw IllegalArgumentException", threwDup);
+        check("failed adds leave BoundedStack unchanged", u.sizeUser() <= 20);
     }
 
     // --- Mutator : addPassword ตรวจสอบว่า Password ผ่านเงื่อนไขที่ต้องการไหม ---
@@ -130,6 +134,7 @@ public class BoundedStackTest {
             threwNull = true;
         }
         check("addPassword(null) -> throw IllegalArgumentException", threwNull);
+        check("addPassword()", threwNull);
     }
 
     // --- Mutator : addSeat ต้องรักษาลำดับและกัน Seat ด้วยว่าที่นั่งซ้ำกันไหม ---
@@ -159,28 +164,110 @@ public class BoundedStackTest {
             threwDup = true;
         }
         check("addSeat(dupicate) -> throw IllegalArgumentException", threwDup);
-        check("failed adds leave BoundedStack unchanged", s.size() <= 250);
+        check("failed adds leave BoundedStack unchanged", s.sizeSeat() <= 250);
     }
 
     // --- Mutator : RemoveUser ลบ user ที่มีชื่อซ้ำกัน ---
-    private static void testremoveUser(){
+    private static void testremoveUser() {
         System.out.println("\n--RemoveUser--\n");
         BoundedStack u = new BoundedStack();
         u.addUser("AAAA"); // เพิ่ม User เข้าไปก่อน
-        check("remove(AAAA) -> returns true",u.removeUser("AAAA")); // ถ้ามี user ชื่อนี้จริงจะทำการ remove
-        check("after remove -> not contains(AAAA)", !u.containsUser("AAAA")); //ตรวจสอบหลังจาก remove ไปแล้ว user ชื่อนี้หายไปจริงไหม
+        check("remove(AAAA) -> returns true", u.removeUser("AAAA")); // ถ้ามี user ชื่อนี้จริงจะทำการ remove
+        check("after remove -> not contains(AAAA)", !u.containsUser("AAAA")); // ตรวจสอบหลังจาก remove ไปแล้ว user ชื่อนี้หายไปจริงไหม
         check("dont have user -> return false", !u.removeUser("AAAA")); // ถ้าไม่มี user เราจะ return false ไปเลย
     }
 
     // --- Mutator : RemoveSeat ลบ seat ที่มีการจองที่นั่งซ้ำกัน ---
-    private static void testremoveSeat(){
+    private static void testremoveSeat() {
         System.out.println("\n--RemoveSeat--\n");
         BoundedStack s = new BoundedStack();
-        s.addSeat("A1"); //เพิ่ม Seat เข้าไปก่อน
+        s.addSeat("A1"); // เพิ่ม Seat เข้าไปก่อน
         check("remove(A1) -> returns true", s.removeSeat("A1"));
         check("after remove -> not contains(A1)", !s.containsSeat("A1"));
         check("dont have seat -> return false", !s.removeSeat("A1"));
+    }
+
+    // --- Observers : ต้องไม่มี side effect ---
+
+    private static void testObservers() {
+        System.out.println("\n-- Observers --\n");
+        BoundedStack u = new BoundedStack(Arrays.asList("AAAA", "BBBB"));
+        check("user report 2", u.sizeUser() == 2);
+        check("contains find an existing user", u.containsUser("AAAA"));
+        check("contains rejects a missing user", !u.containsUser("ZZZZ"));
+        check("user returns the full list in order", u.User().equals(Arrays.asList("AAAA", "BBBB")));
+
+        BoundedStack s = new BoundedStack(Arrays.asList("A1", "A2"));
+        check("seat report 2", s.sizeSeat() == 2);
+        check("contains find an existing seat", s.containsUser("A1"));
+        check("contains rejects a missing seat", !s.containsUser("Z1"));
+        check("user returns the full list in order", s.Seat().equals(Arrays.asList("A1", "A2")));
+
+        int before = u.sizeUser();
+        u.sizeUser();
+        u.containsUser("AAAA");
+        u.User();
+        check("Observers user have no side effects", u.sizeUser() == before);
+
+        int before1 = s.sizeSeat();
+        s.sizeSeat();
+        s.containsSeat("A1");
+        s.Seat();
+        check("Observers seat have no side effects", s.sizeSeat() == before1);
+    }
+
+    private static void testProducerUser() {
+        System.out.println("\n-- Producer --\n");
+        System.out.println("-- ProducerUser --\n");
+        BoundedStack original = new BoundedStack(Arrays.asList("AAAA", "BBBB", "CCCC", "DDDD"));
+        BoundedStack shuffledUser = original.shuffledUser();
+
+        check("shuffledUser has the same size", shuffledUser.sizeUser() == original.sizeUser());
+        List<String> a = new ArrayList<String>(original.User());
+        List<String> b = new ArrayList<String>(shuffledUser.User());
+        Collections.sort(a);
+        Collections.sort(b);
+        check("shuffledUser contains exactly the same User", a.equals(b));
+        check("shuffledUser does not mutate the original",
+                original.User().equals(Arrays.asList("AAAA", "BBBB", "CCCC", "DDDD")));
+
+        // mutate user ตัวใหม่ต้องไม่ไปกระทบกับ user ตัวเก่า
+        shuffledUser.addUser("EEEE");
+        check("mutate the result does not affect the original", original.sizeUser() == 4);
+
+        // bounday : shuffleUser ถ้า user ไม่มีการ input เข้ามาต้องไม่พัง
+        BoundedStack emptyShuffledUser = new BoundedStack().shuffledUser();
+        check("shuffling an empty BoundedStack is safe", emptyShuffledUser.sizeUser() == 0);
+    }
+
+    private static void testProducerSeat() {
+        System.out.println("\n-- ProducerSeat --\n");
+        BoundedStack original = new BoundedStack(Arrays.asList("A1", "A2", "A3", "A4"));
+        BoundedStack shuffledSeat = original.shuffledUser();
+
+        check("shuffledSeat has the same size", shuffledSeat.sizeUser() == original.sizeSeat());
+        List<String> a = new ArrayList<String>(original.Seat());
+        List<String> b = new ArrayList<String>(shuffledSeat.Seat());
+        Collections.sort(a);
+        Collections.sort(b);
+        check("shuffledSeat contains exactly the same Seat", a.equals(b));
+        check("shuffledSeat does not mutate the original",
+                original.Seat().equals(Arrays.asList("A1", "A2", "A3", "A4")));
+
+        // mutate seat ตัวใหม่ต้องไม่ไปกระทบกับ seat ตัวเก่า
+        shuffledSeat.addSeat("A5");
+        check("mutate the result does not affect the original", original.sizeSeat() == 4);
+
+        // bounday : shuffleSeat ถ้า seat ไม่มีการจองเข้ามาต้องไม่พัง
+        BoundedStack emptyShuffledSeat = new BoundedStack().shuffledSeat();
+        check("shuffling an empty BoundedStack is safe", emptyShuffledSeat.sizeSeat() == 0);
+    }
+    // --- ทดสอบว่าไม่เกิด representation exposure ---
+    private static void testExposure(){
 
     }
+    
+
+
 
 }
