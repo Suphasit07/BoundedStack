@@ -1,7 +1,6 @@
 import java.util.*;
 /*
- * 
- * BoundedStack คือ 
+ * BoundedStack คือ ระบบจองที่นั่งโดยที่ user ต้องไม่ซ้ำกันและสร้าง password ขึ้นมาเป็นของตัวเอง แล้วห้ามจองที่นั่งเดียวกัน
  */
 // จิรายุ เขียวภักดี 6821651116
 // ศุภธิษณ์ กอประเสริฐสุด 6821651825
@@ -184,6 +183,8 @@ public class BoundedStack {
             throw new IllegalArgumentException();
         if (Seat.size() >= MAX_SEAT) // ตรวจสอบว่า seat มีที่นั่งเกินไหม
             throw new IllegalArgumentException();
+        if (Seat.size() < 0)
+            throw new IllegalArgumentException();
         Seat.add(seat);// password ที่เพิ่มเข้ามานำไปต่อใน list password
         CheckRep();
         return true;
@@ -191,7 +192,6 @@ public class BoundedStack {
 
     /**
      * ลบ Accout User กับ Seat
-     * 
      * @param user ที่ชื่อซ้ำกัน
      * @param seat จองที่นั่งเดียวกัน
      * @return true ถ้า user มีชื่อที่ซ้ำกันและ seat จองที่นั่งเดียวกัน , false ถ้า user มีชื่อที่ไม่ซ้ำกันและ seat ไม่จองที่นั่งเดียวกัน
