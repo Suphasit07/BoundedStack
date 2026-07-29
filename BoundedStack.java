@@ -74,8 +74,9 @@ public class BoundedStack {
 
     // ===== Creator =====
     /**
-     * 
-     * @param capacity
+     * สร้าง Accout User กับ Password เพื่อจอง Seat
+     * @param UserAndSeat ต้องไม่เป็น Null , String ว่าง 
+     * @throws IllegalArgumentException ถ้าซ้ำกันจะโยน Exception
      */
     public BoundedStack() {
         this.User = new ArrayList<>();
