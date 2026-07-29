@@ -37,6 +37,16 @@ public class BoundedStackTest {
         testProducerUser();
         testProducerSeat();
         testExposure();
+
+        System.out.println("\n=== Summary ===");
+        System.out.println("Passed "+ passed);
+        System.out.println("Failse "+ failed);
+        System.out.println("Total "+(passed+failed));
+        System.out.println(failed == 0 ? "ALL TEST PASSED" : "SOME TESTS FAILED");
+
+        if (failed > 0) {
+            System.exit(1);
+        }
     }
 
     // --- Creators
