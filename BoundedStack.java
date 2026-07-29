@@ -4,37 +4,36 @@ import java.util.*;
  */
 // จิรายุ เขียวภักดี 6821651116
 // ศุภธิษณ์ กอประเสริฐสุด 6821651825
-
 public class BoundedStack {
     private final List<String> User;
     private final List<String> Password;
     private final List<String> Seat;
-    public static final int MAX_USER = 20;
-    public static final int MAX_PASSWORD = 8;
-    public static final int MAX_SEAT = 250;
+    private static final int MAX_USER = 20;
+    private static final int MAX_PASSWORD = 8;
+    private static final int MAX_SEAT = 250;
     // Abstraction Function:
-    // AF(user,password,seat = กดบัตรคอนเสิร์ตแบบตามลำดับ User และ Seat
-    // ตามลำดับ)
+    // AF(user,password,seat = จองที่นั่งแบบตามลำดับที่ขึ้นอยู่กับ User และ Seat)
 
     // Representation Invariant:
-    // ชื่อ user ห้ามซ้ำกันและชื่อ user ห้ามเกิน 10 ตัว
+    // ชื่อ user ห้ามซ้ำกันและชื่อ user ห้ามเกิน 20 ตัว
     // ไม่มีชื่อ user,password,seat ที่เป็นสตริงว่าง
     // password ต้องมีมากกว่า 8 ตัว และต้องไม่เป็นช่องว่าง
     // password ต้องมีทั้งตัวเลข ตัวอักษรพิมพ์เล็กพิมพ์ใหญ๋ผสมกัน
     // ตำแหน่ง Seat ต้องไม่ซ้ำกันและมีได้ไม่เกิน 250;
     // user 1 คน จองที่นั่งได้ 1 ที่
-    //
 
     // safety form rep exposure:
     // สร้าง Private final เพื่อไม่ให้เเก้ไขได้
     // user เป็น private final
     // password เป็น private final
     // seat เป็น private final
+    // PasswordOwner เป็น private final
+    // SeatOwner เป็น private final
     // คัดลอกทั้งขาเข้าขาออก
-    //
 
     public void CheckRep() {
         assert User != null : "user is not null";
+        assert Password != null : "password is not null";
         assert Seat != null : "seat is not null";
         assert User.size() <= MAX_USER;
         assert Seat.size() <= MAX_SEAT;
@@ -50,32 +49,32 @@ public class BoundedStack {
             assert !s.isEmpty();
             assert seenSeat.add(s);
         }
-        for (String pw : Password) {
-            assert pw != null : "password is not null";
-            assert !pw.isEmpty();
-            assert pw.length() >= MAX_PASSWORD;
+    }
 
-            boolean hasUpper = false;
-            boolean hasLower = false;
-            boolean hasDigit = false;
-            for (int i = 0; i < pw.length(); i++) {
-                Character c = pw.charAt(i);
-                Character d = pw.charAt(i);
-                if (Character.isUpperCase(c))
-                    hasUpper = true;
-                if (Character.isLowerCase(c))
-                    hasLower = true;
-                if (Character.isDigit(d))
-                    hasDigit = true;
-            }
-            assert hasUpper && hasLower && hasDigit;
+    private static boolean validate(String password) {
+        if (password == null || password.length() < MAX_PASSWORD)
+            return false;
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        for (int i = 0; i < password.length(); i++) {
+            Character c = password.charAt(i);
+            Character d = password.charAt(i);
+            if (Character.isUpperCase(c))
+                hasUpper = true;
+            if (Character.isLowerCase(c))
+                hasLower = true;
+            if (Character.isDigit(d))
+                hasDigit = true;
         }
+        return hasUpper && hasLower && hasDigit;
     }
 
     // ===== Creator =====
     /**
      * สร้าง Accout User กับ Password เพื่อจอง Seat
-     * @param UserAndSeat ต้องไม่เป็น Null , String ว่าง 
+     * 
+     * @param UserAndSeat ต้องไม่เป็น Null , String ว่าง
      * @throws IllegalArgumentException ถ้าซ้ำกันจะโยน Exception
      */
     public BoundedStack() {
@@ -121,100 +120,69 @@ public class BoundedStack {
     // ===== Mutators =====
 
     /**
-     * @param user ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง
+     * @param user     ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง user
+     *                 ต้องมีตัวอักษรไม่เกิน 20 ตัว ตรวจสอบว่า user
+     *                 นี้มีคนจองไปยัง(1 user 1 seat) user ต้องมีน้อยกว่าที่นั่ง
+     * @param seat     ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ตรวจสอบว่า seat
+     *                 นี้มีคนจองไปยัง(1 user 1 seat)
+     * @param password เช็คว่าผ่านเงื่อนไขในการตั้งไหม
      * @throws IllegalArgumentException ถ้า userไม่เป็นไปตามเงื่อนไขที่ต้องการ
      * @return return true ถ้าเพิ่มสำเร็จ , false ถ้าเพิ่มไม่สำเร็จ
      */
-    public boolean addUser(String user) {
+    public void push(String user, String password, String seat) {
         if (user == null || user.isEmpty())
             throw new IllegalArgumentException();
-        if(user.length() > MAX_USER) // ตรวจสอบว่าชื่อ user มีตัวอักษรเกิน 20 ตัวไหม
+        if (user.length() > MAX_USER)
             throw new IllegalArgumentException();
-        if (User.contains(user)) // ตรวจสอบว่า user คนนี้จองที่นั่งไปยัง(1 user 1 seat)
+        if (User.contains(user))
             throw new IllegalArgumentException();
-        User.add(user); // user ที่เพิ่มเข้ามานำไปต่อใน list user
+        if (!validate(password))
+            throw new IllegalArgumentException();
+        if (seat == null || seat.isEmpty())
+            throw new IllegalArgumentException();
+        if (Seat.contains(seat))
+            throw new IllegalArgumentException();
+        if (User.size() > MAX_SEAT)
+            throw new IllegalArgumentException();
+        User.add(user);
+        Password.add(password);
+        Seat.add(seat);
         CheckRep();
-        return true;
     }
 
     /**
-     * @param password ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง
-     *                 ต้องมีตัวอักษรมากกว่า 8 ตัว
-     *                 และต้องมีตัวพิมพ์เล็กพิมพ์ใหญ่ตัวเลขผสมกัน
-     * @throws IllegalArgumentException ถ้า password ไม่เป็นไปตามเงื่อนไขที่ต้องการ
-     * @return return true ถ้าเพิ่มสำเร็จ , false ถ้าเพิ่มไม่สำเร็จ
+     * @param ยกเลิกการจองที่นั่ง จะทำการลบ user,password,seat ที่อยู่คนท้ายสุดออก
+     * @return true ถ้าสำเร็จ , false ถ้าไม่เสร็จ
+     * @throws IllegalArgumentException ถ้าไม่มีการจอง
      */
-    public boolean addPassword(String password) {
-        if (password == null || password.isEmpty())
-            throw new IllegalArgumentException();
-        if (password.length() <= MAX_PASSWORD) // เช็คว่า password มีมากกว่า 8 ตัวไหม
-            throw new IllegalArgumentException();
-        boolean hasUpper = false;
-        boolean hasLower = false;
-        boolean hasDigit = false;
-        for (int i = 0; i < password.length(); i++) {
-            Character c = password.charAt(i);
-            if (Character.isUpperCase(c))
-                hasUpper = true;
-            if (Character.isLowerCase(c))
-                hasLower = true;
-            if (Character.isDigit(c))
-                hasDigit = true;
-        }
-        if (!(hasUpper && hasLower && hasDigit)) {
+
+    public boolean pop() {
+        if (isEmpty()) {
             throw new IllegalArgumentException();
         }
-        assert hasUpper && hasLower && hasDigit;
-        Password.add(password);// password ที่เพิ่มเข้ามานำไปต่อใน list password
+        int last = User.size() - 1;
+        User.remove(last);
+        Password.remove(last);
+        Seat.remove(last);
         CheckRep();
         return true;
-    }
 
-    /**
-     * @param seat ต้องไม่เป็น null และไม่เป็นสตริงช่องว่าง ต้องไม่มีมากกว่า 250
-     *             ที่นั่ง
-     * @throws IllegalArgumentException ถ้า seat ไม่เป็นไปตามเงื่อนไขที่ต้องการ
-     * @return return true ถ้าเพิ่มสำเร็จ , false ถ้าเพิ่มไม่สำเร็จ
-     */
-
-    public boolean addSeat(String seat) {
-        if (seat == null || seat.isEmpty()) // เช็คว่า seat เป็น null กับ ช่องว่างไหม
-            throw new IllegalArgumentException();
-        if (Seat.contains(seat)) // ตรวจสอบว่า seat มีที่นั่งยัง(seat ห้ามซ้ำกัน)
-            throw new IllegalArgumentException();
-        if (Seat.size() >= MAX_SEAT) // ตรวจสอบว่า seat มีที่นั่งเกินไหม
-            throw new IllegalArgumentException();
-        if (Seat.size() < 0)
-            throw new IllegalArgumentException();
-        Seat.add(seat);// password ที่เพิ่มเข้ามานำไปต่อใน list password
-        CheckRep();
-        return true;
-    }
-
-    /**
-     * ลบ Accout User กับ Seat
-     * @param user ที่ชื่อซ้ำกัน
-     * @param seat จองที่นั่งเดียวกัน
-     * @return true ถ้า user มีชื่อที่ซ้ำกันและ seat จองที่นั่งเดียวกัน , false ถ้า user มีชื่อที่ไม่ซ้ำกันและ seat ไม่จองที่นั่งเดียวกัน
-     */
-
-    public boolean removeUser(String user) {
-        if (!(User.contains(user)))
-            return false;
-        User.remove(user);
-        CheckRep();
-        return true;
-    }
-
-    public boolean removeSeat(String seat) {
-        if (!(Seat.contains(seat)))
-            return false;
-        Seat.remove(seat);
-        CheckRep();
-        return true;
     }
 
     // ===== Observers =====
+
+    /**
+     * ตรวจสอบการจองที่นั่งที่สุดท้าย โดยไม่ลบ
+     * @return ชื่อ user คนสุดท้ายที่จอง
+     * @throws IllegalArgumentException ถ้า user ไม่จองที่นั่ง
+     */
+
+    public String peek() {
+        if (User.isEmpty())
+            throw new IllegalArgumentException();
+        int last = User.size() - 1;
+        return User.get(last);
+    }
 
     /**
      * ตรวจสอบชื่อ User และ Seat ว่ามีอยู่จริงไหม
@@ -231,7 +199,7 @@ public class BoundedStack {
     /**
      * คืนจำนวน user ทั้งหมด
      */
-    public int sizeUser(){
+    public int sizeUser() {
         return User.size();
     }
 
@@ -243,10 +211,14 @@ public class BoundedStack {
         return Seat.size();
     }
 
+    public boolean isEmpty() {
+        return User.isEmpty();
+    }
+
     /**
      * คืนจำนวน User ทั้งหมดตามลำดับ
      */
-    public List<String> User(){
+    public List<String> User() {
         return new ArrayList<>(User);
     }
 
@@ -267,13 +239,13 @@ public class BoundedStack {
      * @return BoundedStack ใหม่ที่มีรายชื่อผู้ใช้สลับลำดับแล้ว
      */
 
-    public BoundedStack shuffledUser(){
+    public BoundedStack shuffledUser() {
         List<String> copy = new ArrayList<>(User);
         Collections.shuffle(copy);
         return new BoundedStack(copy);
     }
 
-    public String toStringUser(){
+    public String toStringUser() {
         return User.toString();
     }
 
@@ -284,14 +256,14 @@ public class BoundedStack {
      * 
      * @return BoundedStack ใหม่ที่มีรายการที่นั่งสลับลำดับแล้ว
      */
-    
-    public BoundedStack shuffledSeat(){
+
+    public BoundedStack shuffledSeat() {
         List<String> copy1 = new ArrayList<>(Seat);
         Collections.shuffle(copy1);
         return new BoundedStack(copy1);
     }
 
-    public String toStringSeat(){
+    public String toStringSeat() {
         return Seat.toString();
     }
 
