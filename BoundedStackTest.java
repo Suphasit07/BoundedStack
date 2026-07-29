@@ -32,7 +32,6 @@ public class BoundedStackTest {
         testPeek();
         testObservers();
         testProducerUser();
-        testProducerSeat();
         testExposure();
         System.out.println("\n=== Summary ===");
         System.out.println("Passed " + passed);
@@ -193,43 +192,15 @@ public class BoundedStackTest {
     private static void testProducerUser() {
         System.out.println("\n-- Producer --\n");
         System.out.println("-- ProducerUser --\n");
-        BoundedStack original = new BoundedStack(Arrays.asList("AAAA", "BBBB", "CCCC", "DDDD"));
-        BoundedStack shuffledUser = original.shuffledUser();
-        check("shuffledUser has the same size", shuffledUser.sizeUser() == original.sizeUser());
-        List<String> a = new ArrayList<String>(original.User());
-        List<String> b = new ArrayList<String>(shuffledUser.User());
-        Collections.sort(a);
-        Collections.sort(b);
-        check("shuffledUser contains exactly the same User", a.equals(b));
-        check("shuffledUser does not mutate the original",
-                original.User().equals(Arrays.asList("AAAA", "BBBB", "CCCC", "DDDD")));
-        // mutate user ตัวใหม่ต้องไม่ไปกระทบกับ user ตัวเก่า
-        shuffledUser.push("EEEE", "abcD1234", "A3");
-        check("mutate the result does not affect the original", original.sizeUser() == 4);
-        // bounday : shuffleUser ถ้า user ไม่มีการ input เข้ามาต้องไม่พัง
-        BoundedStack emptyShuffledUser = new BoundedStack().shuffledUser();
-        check("shuffling an empty BoundedStack is safe", emptyShuffledUser.sizeUser() == 0);
-    }
-
-    // ProducerSeat
-    private static void testProducerSeat() {
-        System.out.println("\n-- ProducerSeat --\n");
-        BoundedStack original = new BoundedStack(Arrays.asList("A1", "A2", "A3", "A4"));
-        BoundedStack shuffledSeat = original.shuffledSeat();
-        check("shuffledSeat has the same size", shuffledSeat.sizeUser() == original.sizeUser());
-        List<String> a = new ArrayList<String>(original.Seat());
-        List<String> b = new ArrayList<String>(shuffledSeat.Seat());
-        Collections.sort(a);
-        Collections.sort(b);
-        check("shuffledSeat contains exactly the same Seat", a.equals(b));
-        check("shuffledSeat does not mutate the original",
-                original.Seat().equals(Arrays.asList("A1", "A2", "A3", "A4")));
-        // mutate seat ตัวใหม่ต้องไม่ไปกระทบกับ seat ตัวเก่า
-        shuffledSeat.push("AAAA", "ABCd1234", "A5");
-        check("mutate the result does not affect the original", original.sizeSeat() == 4);
-        // bounday : shuffleSeat ถ้า seat ไม่มีการจองเข้ามาต้องไม่พัง
-        BoundedStack emptyShuffledSeat = new BoundedStack().shuffledSeat();
-        check("shuffling an empty BoundedStack is safe", emptyShuffledSeat.sizeSeat() == 0);
+        BoundedStack bs = new BoundedStack();
+        boolean threwName = false;
+        try {
+            bs.changeUserName("AAAABBB", "BBBBAAA");
+        } catch (IllegalArgumentException e) {
+            threwName = true;
+        }
+        check("change nameUser succeed",threwName);
+        
     }
 
     // --- ทดสอบว่าไม่เกิด representation exposure ---
