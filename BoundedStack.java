@@ -87,19 +87,19 @@ public class BoundedStack {
         this.Password = new ArrayList<>();
         this.Seat = new ArrayList<>();
         if (UserAndSeat == null)
-            throw new IllegalArgumentException("UserandSeat is null");
+            throw new IllegalArgumentException("UserandSeat is not null");
         if (UserAndSeat.size() > MAX_SEAT)
-            throw new IllegalArgumentException("UserandSeat have > MAX_SEAT(250)");
+            throw new IllegalArgumentException("UserandSeat dont have > MAX_SEAT(250)");
         if (UserAndSeat.size() < 0)
-            throw new IllegalArgumentException("UserandSeat have < 0");
+            throw new IllegalArgumentException("UserandSeat dont have < 0");
         Set<String> seen = new HashSet<>();
         for (String s : UserAndSeat) {
             if (s == "")
-                throw new IllegalArgumentException("s is empty");
+                throw new IllegalArgumentException("s is not empty");
             if (s == null)
-                throw new IllegalArgumentException("s is null");
+                throw new IllegalArgumentException("s is not null");
             if (!seen.add(s))
-                throw new IllegalArgumentException("s dont have duplicate");
+                throw new IllegalArgumentException("s have duplicate");
         }
         this.User.addAll(UserAndSeat);
         this.Seat.addAll(UserAndSeat);
@@ -120,19 +120,19 @@ public class BoundedStack {
      */
     public void push(String user, String password, String seat) {
         if (user == null || user.isEmpty())
-            throw new IllegalArgumentException("user is null and user is empty");
+            throw new IllegalArgumentException("user is not null and user is not empty");
         if (user.length() > MAX_USER)
-            throw new IllegalArgumentException("user length > 20");
+            throw new IllegalArgumentException("user dont have length > 20");
         if (User.contains(user))
             throw new IllegalArgumentException("user dont have duplicate");
         if (!validate(password))
-            throw new IllegalArgumentException("password miss condition");
+            throw new IllegalArgumentException("password must be miss condition");
         if (seat == null || seat.isEmpty())
-            throw new IllegalArgumentException("seat is null and seat is empty");
+            throw new IllegalArgumentException("seat is not null and seat not is empty");
         if (Seat.contains(seat))
             throw new IllegalArgumentException("seat dont have duplicate");
         if (User.size() > MAX_SEAT)
-            throw new IllegalArgumentException("User have > MAX_SEAT(250)");
+            throw new IllegalArgumentException("User dont have > MAX_SEAT(250)");
         User.add(user);
         Password.add(password);
         Seat.add(seat);
@@ -147,7 +147,7 @@ public class BoundedStack {
 
     public boolean pop() {
         if (isEmpty()) {
-            throw new IllegalArgumentException("User and Seat is empty");
+            throw new IllegalArgumentException("User and Seat is not empty");
         }
         int last = User.size() - 1;
         User.remove(last);
@@ -167,7 +167,7 @@ public class BoundedStack {
 
     public String peek() {
         if (User.isEmpty())
-            throw new IllegalArgumentException("User is empty");
+            throw new IllegalArgumentException("User is not empty");
         int last = User.size() - 1;
         return User.get(last);
     }
@@ -197,6 +197,7 @@ public class BoundedStack {
 
     public int sizeSeat() {
         return Seat.size();
+        
     }
 
     public boolean isEmpty() {
@@ -227,11 +228,11 @@ public class BoundedStack {
      */
     public BoundedStack changeUserName(String oldName,String changeName){
         if(oldName == null || oldName.isEmpty() || !User.contains(oldName))
-            throw new IllegalArgumentException("oldname is null and empty and User dont has the same oldName");
+            throw new IllegalArgumentException("oldname is not null and empty and User dont has the same oldName");
         if(changeName == null || changeName.isEmpty() || changeName.length() > MAX_USER)
-            throw new IllegalArgumentException("changeName is null and empty and have > MAX_USER(20)");
+            throw new IllegalArgumentException("changeName is not null and empty and have > MAX_USER(20)");
         if(User.contains(changeName))
-            throw new IllegalArgumentException("User has the same changeName");
+            throw new IllegalArgumentException("User has not the same changeName");
 
         BoundedStack newUser = new BoundedStack();
         for (int i = 0; i < User.size(); i++) {
