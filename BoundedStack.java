@@ -235,19 +235,19 @@ public class BoundedStack {
      * @param changeUserName ถ้าชื่อ user ใหม่ซ้ำกับชื่อ user ที่มีอยู่แล้วหรือชื่อที่ซ้ำกัน จะทำการ throw new    IllegalArgumentException
      * @return ชื่อ user ที่เปลี่ยนใหม่แล้ว
      */
-    public BoundedStack changeUserName(String original,String change){
-        if(original == null || original.isEmpty() || !User.contains(original))
+    public BoundedStack changeUserName(String oldName,String changeName){
+        if(oldName == null || oldName.isEmpty() || !User.contains(oldName))
             throw new IllegalArgumentException();
-        if(change == null || change.isEmpty() || change.length() > MAX_USER)
+        if(changeName == null || changeName.isEmpty() || changeName.length() > MAX_USER)
             throw new IllegalArgumentException();
-        if(User.contains(change))
+        if(User.contains(changeName))
             throw new IllegalArgumentException();
 
         BoundedStack newUser = new BoundedStack();
         for (int i = 0; i < User.size(); i++) {
             String name;
-            if(User.get(i).equals(original)){
-                name = change;
+            if(User.get(i).equals(oldName)){
+                name = changeName;
             }else{
                 name = User.get(i);
             }

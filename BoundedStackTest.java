@@ -81,7 +81,7 @@ public class BoundedStackTest {
     }
 
     // --- Mutator ---
-    // push ตรวจสอบว่า user,seat มีเป็น null หรือ สตริงว่างไหม และ มีซ้ำกันไหม
+    // testpush ตรวจสอบว่า user,seat มีเป็น null หรือ สตริงว่างไหม และ มีซ้ำกันไหม
     private static void testPush() {
         System.out.println("\n-- Mutators --");
         System.out.println("\n-- Push --\n");
@@ -163,6 +163,7 @@ public class BoundedStackTest {
         check("check last user not delete", threwEmpty);
     }
 
+    // testObservers ตรวจสอบ ชื่อ User กับ Seat ว่ามีอยู่จริงไหม
     private static void testObservers() {
         System.out.println("\n-- testObservers --\n");
         BoundedStack u = new BoundedStack(Arrays.asList("AAAA", "BBBB"));
@@ -188,7 +189,7 @@ public class BoundedStackTest {
     }
 
     // -- Producer --
-    // ProducerUser
+    // ProducerUser เปลี่ยนชื่อ User
     private static void testProducerUser() {
         System.out.println("\n-- Producer --\n");
         System.out.println("-- ProducerUser --\n");
