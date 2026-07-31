@@ -1,9 +1,9 @@
 import java.util.*;
 /*
- * BoundedStack คือ ระบบจองที่นั่งโดยที่ user ต้องไม่ซ้ำกันและสร้าง password ขึ้นมาเป็นของตัวเอง แล้วห้ามจองที่นั่งเดียวกัน
+ * BoundedStack คือ ระบบจองที่นั่งโดยที่ user ต้องไม่ซ้ำกันและสร้าง password ขึ้นมาเป็นของตัวเองแล้วห้ามจองที่นั่งเดียวกัน
  */
-// จิรายุ เขียวภักดี 6821651116
-// ศุภธิษณ์ กอประเสริฐสุด 6821651825
+// จิรายุ เขียวภักดี 6821651116 Sec 800
+// ศุภธิษณ์ กอประเสริฐสุด 6821651825 Sec 801
 public class BoundedStack {
     private final List<String> User;
     private final List<String> Password;
